@@ -2,10 +2,14 @@ require 'rspec'
 require 'simplecov'
 require 'active_rest_client'
 require "ostruct"
+require 'webmock/rspec'
 
 if ENV["JENKINS"]
   require 'simplecov-rcov'
   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+elsif ENV["TRAVIS"]
+  require 'coveralls'
+  Coveralls.wear!
 end
 
 RSpec.configure do |config|

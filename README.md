@@ -1,5 +1,7 @@
 # ActiveRestClient
 
+[![Build Status](https://travis-ci.org/whichdigital/active-rest-client.png?branch=master)](https://travis-ci.org/whichdigital/active-rest-client) [![Coverage Status](https://coveralls.io/repos/whichdigital/active-rest-client/badge.png)](https://coveralls.io/r/whichdigital/active-rest-client) [![Code Climate](https://codeclimate.com/github/whichdigital/active-rest-client.png)](https://codeclimate.com/github/whichdigital/active-rest-client) [![Gem Version](https://badge.fury.io/rb/active_rest_client.png)](http://badge.fury.io/rb/active_rest_client)
+
 This gem is for accessing REST services in an ActiveRecord style.  ActiveResource already exists for this, but it doesn't work where the resource naming doesn't follow Rails conventions, it doesn't have in-built caching and it's not as flexible in general.
 
 ## Installation
@@ -100,8 +102,32 @@ puts @tv.properties["3d"]
 @tv.properties["3d"] = true
 ```
 
+If you want to debug the response, using inspect on the response object may well be useful.  However, if you want a simpler output, then you can call `#to_json` on the response object:
+
+```ruby
+@person = Person.find(email:"something@example.com")
+puts @person.to_json
+```
+
 ## Advanced Features
 
+### Faraday Configuration
+
+ActiveRestClient uses Faraday to allow switching HTTP backends, the default is Patron. To change the used backend just set it in the class by setting `adapter` to a Faraday supported adapter symbol.
+
+```ruby
+ActiveRestClient::Base.adapter = :net_http
+```
+
+If you want more control you can pass a complete configuration block. For available config variables look into the Faraday documentation.
+
+```ruby
+ActiveRestClient::Base.faraday_config do |faraday|
+  faraday.adapter(:net_http)
+  faraday.options.timeout       = 10
+  faraday.headers['User-Agent'] = "ActiveRestClient/#{ActiveRestClient::VERSION}"
+end
+````
 ### Associations
 
 There are two types of association.  One assumes when you call a method you actually want it to call the method on a separate class (as that class has other methods that are useful).  The other is lazy loading related classes from a separate URL.

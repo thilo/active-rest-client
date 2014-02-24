@@ -10,7 +10,7 @@ module ActiveRestClient
     attr_accessor :_status
 
     instance_methods.each do |m|
-      next unless %i{display errors presence load require hash untrust trust freeze method enable_warnings with_warnings suppress capture silence quietly debugger breakpoint}.include? m
+      next unless %w{display errors presence load require hash untrust trust freeze method enable_warnings with_warnings suppress capture silence quietly debugger breakpoint}.map(&:to_sym).include? m
       undef_method m
     end
 
@@ -126,6 +126,25 @@ module ActiveRestClient
 
     def respond_to_missing?(method_name, include_private = false)
       @attributes.has_key? method_name.to_sym
+    end
+
+    def to_hash
+      output = {}
+      @attributes.each do |key, value|
+        if value.is_a? ActiveRestClient::Base
+          output[key.to_s] = value.to_hash
+        elsif value.is_a? Array
+          output[key.to_s] = value.map(&:to_hash)
+        else
+          output[key.to_s] = value
+        end
+      end
+      output
+    end
+
+    def to_json
+      output = to_hash
+      output.to_json
     end
   end
 

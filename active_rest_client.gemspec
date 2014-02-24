@@ -22,13 +22,16 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
+  spec.add_development_dependency "webmock"
   spec.add_development_dependency "rspec_junit_formatter"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "simplecov-rcov"
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency 'terminal-notifier-guard'
+  spec.add_development_dependency 'coveralls'
 
   spec.add_runtime_dependency "oj", "=2.1.4" # 2.1.7 breaks under linux
   spec.add_runtime_dependency "activesupport"
-  spec.add_runtime_dependency "patron", '=0.4.9' # 0.4.18 breaks against Curl v0.7.15
+  spec.add_runtime_dependency "faraday"
+  spec.add_runtime_dependency "patron", ">= 0.4.9" # 0.4.18 breaks against Curl v0.7.15 but works with webmock
 end
